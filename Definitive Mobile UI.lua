@@ -22,7 +22,7 @@ function Kavo:DraggingEnabled(frame, parent)
             framePos = parent.Position
             
             input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
+                if input.UserInputState == Enum.UserInputState.End or input.UserInputType == Enum.UserInputType.Touch then
                     dragging = false
                 end
             end)
@@ -1381,7 +1381,7 @@ function Kavo.CreateLib(kavName, themeList)
                         }):Play()
                         hovering = false
                     end
-                end)        
+                end)
 
                 coroutine.wrap(function()
                     while wait() do
@@ -1399,46 +1399,38 @@ function Kavo.CreateLib(kavName, themeList)
                     end
                 end)()
 
-                local Value
-                sliderBtn.MouseButton1Down:Connect(function()
-                    if not focusing then
-                        game.TweenService:Create(val, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
-                            TextTransparency = 0
-                        }):Play()
-                        Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(minvalue)) or 0
-                        pcall(function()
-                            callback(Value)
-                        end)
-                        sliderDrag:TweenSize(UDim2.new(0, math.clamp(mouse.X - sliderDrag.AbsolutePosition.X, 0, 149), 0, 6), "InOut", "Linear", 0.05, true)
-                        moveconnection = mouse.Move:Connect(function()
-                            val.Text = Value
-                            Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(minvalue))
-                            pcall(function()
-                                callback(Value)
-                            end)
-                            sliderDrag:TweenSize(UDim2.new(0, math.clamp(mouse.X - sliderDrag.AbsolutePosition.X, 0, 149), 0, 6), "InOut", "Linear", 0.05, true)
-                        end)
-                        releaseconnection = uis.InputEnded:Connect(function(Mouse)
-                            if Mouse.UserInputType == Enum.UserInputType.MouseButton1 or Mouse.UserInputType == Enum.UserInputType.Touch then
-                                local Value
-                                if Input.UserInputType == Enum.UserInputType.MouseMovement then
-                                    Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(minvalue))
-                                elseif Input.UserInputType == Enum.UserInputType.Touch then
-                                    Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(minvalue))
-                                end
-                                pcall(function()
-                                    callback(Value)
-                                end)
-                                val.Text = Value
-                                game.TweenService:Create(val, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
-                                    TextTransparency = 1
-                                }):Play()
-                                sliderDrag:TweenSize(UDim2.new(0, math.clamp(mouse.X - sliderDrag.AbsolutePosition.X, 0, 149), 0, 6), "InOut", "Linear", 0.05, true)
-                                moveconnection:Disconnect()
-                                releaseconnection:Disconnect()
-                            end
-                        end)
-                    else
+                local function updateSlider(mousePosition)
+                    local sliderWidth = sliderBtn.AbsoluteSize.X
+                    local mouseX = mousePosition.X - sliderBtn.AbsolutePosition.X
+                    local newValue = math.floor(((mouseX / sliderWidth) * (maxvalue - minvalue)) + minvalue)
+                
+                    newValue = math.clamp(newValue, minvalue, maxvalue)
+                    sliderDrag.Size = UDim2.new(0, mouseX, sliderDrag.Size.Y.Offset)
+                    val.Text = newValue
+                
+                    pcall(function()
+                        callback(newValue)
+                    end)
+                end
+                
+                sliderBtn.InputBegan:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.Touch then
+                        updateSlider(input.Position)
+                    end
+                end)
+                
+                sliderBtn.InputChanged:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.Touch then
+                        updateSlider(input.Position)
+                    end
+                end)
+                
+                sliderBtn.InputEnded:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.Touch then
+                        local mouseX = input.Position.X - sliderBtn.AbsolutePosition.X
+                        local newValue = math.floor(((mouseX / sliderBtn.AbsoluteSize.X) * (maxvalue - minvalue)) + minvalue)
+                        newValue = math.clamp(newValue, minvalue, maxvalue)
+                        val.Text = newValue  
                         for i,v in next, infoContainer:GetChildren() do
                             Utility:TweenObject(v, {Position = UDim2.new(0,0,2,0)}, 0.2)
                             focusing = false
