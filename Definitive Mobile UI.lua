@@ -1413,19 +1413,19 @@ function Kavo.CreateLib(kavName, themeList)
                     end)
                 end
                 
-                sliderBtn.InputBegan:Connect(function(input)
+                btn.InputBegan:Connect(function(input)
                     if input.UserInputType == Enum.UserInputType.Touch then
                         updateSlider(input.Position)
                     end
                 end)
                 
-                sliderBtn.InputChanged:Connect(function(input)
+                btn.InputChanged:Connect(function(input)
                     if input.UserInputType == Enum.UserInputType.Touch then
                         updateSlider(input.Position)
                     end
                 end)
                 
-                sliderBtn.InputEnded:Connect(function(input)
+                btn.InputEnded:Connect(function(input)
                     if input.UserInputType == Enum.UserInputType.Touch then
                         local mouseX = input.Position.X - sliderBtn.AbsolutePosition.X
                         local newValue = math.floor(((mouseX / sliderBtn.AbsoluteSize.X) * (maxvalue - minvalue)) + minvalue)
