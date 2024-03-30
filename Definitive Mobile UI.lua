@@ -282,9 +282,9 @@ function Kavo.CreateLib(kavName, themeList)
 
     if IsOnMobile then
         if not game.CoreGui:FindFirstChild("Show") then
-            local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
-            ScreenGui.Name = "Show"
-            local QuickCapture = Instance.new("TextButton", ScreenGui)
+            local NewScreenGui = Instance.new("ScreenGui", game.CoreGui)
+            NewScreenGui.Name = "Show"
+            local QuickCapture = Instance.new("TextButton", NewScreenGui)
             QuickCapture.Name = "UI"
             QuickCapture.BackgroundColor3 = Color3.fromRGB(85, 0, 255)
             QuickCapture.BackgroundTransparency = 0.14
