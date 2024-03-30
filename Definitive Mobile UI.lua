@@ -141,8 +141,8 @@ end)
 
 local LibName = tostring(math.random(1, 100))..tostring(math.random(1,50))..tostring(math.random(1, 100))
 
-if coregui[LibName] then
-    coregui[LibName]:Destroy()
+if coregui:FindFirstChild(LibName) then
+    coregui:FindFirstChild(LibName):Destroy()
 end
 
 function Kavo:ToggleUI()
