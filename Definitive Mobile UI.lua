@@ -809,6 +809,23 @@ function Kavo.CreateLib(kavName, themeList)
             
             --functions stolen from orion
 
+            local function Create(Name, Properties, Children)
+                local Object = Instance.new(Name)
+                for i, v in next, Properties or {} do
+                    Object[i] = v
+                end
+                for i, v in next, Children or {} do
+                    v.Parent = Object
+                end
+                return Object
+            end
+            
+            local function CreateElement(ElementName, ElementFunction)
+                Module.Elements[ElementName] = function(...)
+                    return ElementFunction(...)
+                end
+            end            
+
             local function MakeElement(ElementName, ...)
                 local NewElement = Module.Elements[ElementName](...)
                 return NewElement
