@@ -140,9 +140,10 @@ pcall(function()
 end)
 
 local LibName = tostring(math.random(1, 100))..tostring(math.random(1,50))..tostring(math.random(1, 100))
+local IsExist = coregui:FindFirstChild(LibName)
 
-if coregui:FindFirstChild(LibName) then
-    coregui:FindFirstChild(LibName):Destroy()
+if IsExist then
+    IsExist:Destroy()
 end
 
 function Kavo:ToggleUI()
