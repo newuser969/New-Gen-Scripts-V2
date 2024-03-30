@@ -9,6 +9,7 @@ local IsOnMobile = table.find({Enum.Platform.IOS, Enum.Platform.Android}, input:
 
 local Utility = {}
 local Objects = {}
+
 function Kavo:DraggingEnabled(frame, parent)
         
     parent = parent or frame
@@ -131,21 +132,24 @@ local SettingsT = {
 local Name = "KavoConfig.JSON"
 
 pcall(function()
+    if not pcall(function() readfile(Name) end) then
+        writefile(Name, game:service'HttpService':JSONEncode(SettingsT))
+    end
 
-if not pcall(function() readfile(Name) end) then
-writefile(Name, game:service'HttpService':JSONEncode(SettingsT))
-end
-
-Settings = game:service'HttpService':JSONEncode(readfile(Name))
+    Settings = game:service'HttpService':JSONEncode(readfile(Name))
 end)
 
 local LibName = tostring(math.random(1, 100))..tostring(math.random(1,50))..tostring(math.random(1, 100))
 
+if coregui[LibName] then
+    coregui[LibName]:Destroy()
+end
+
 function Kavo:ToggleUI()
-    if game.CoreGui[LibName].Enabled then
-        game.CoreGui[LibName].Enabled = false
+    if coregui[LibName].Enabled then
+        coregui[LibName].Enabled = false
     else
-        game.CoreGui[LibName].Enabled = true
+        coregui[LibName].Enabled = true
     end
 end
 
@@ -189,7 +193,7 @@ function Kavo.CreateLib(kavName, themeList)
     local selectedTab 
     kavName = kavName or "Library"
     table.insert(Kavo, kavName)
-    for i,v in pairs(game.CoreGui:GetChildren()) do
+    for i,v in pairs(coregui:GetChildren()) do
         if v:IsA("ScreenGui") and v.Name == kavName then
             v:Destroy()
         end
@@ -306,6 +310,31 @@ function Kavo.CreateLib(kavName, themeList)
                     Main.Visible = false
                 end
             end)
+        elseif coregui:FindFirstChild("Show") then
+            coregui:FindFirstChild("Show"):Destroy()
+            local NewScreenGui = Instance.new("ScreenGui", coregui)
+            NewScreenGui.Name = "Show"
+            local QuickCapture = Instance.new("TextButton", NewScreenGui)
+            QuickCapture.Name = "UI"
+            QuickCapture.BackgroundColor3 = Color3.fromRGB(85, 0, 255)
+            QuickCapture.BackgroundTransparency = 0.14
+            QuickCapture.Position = UDim2.new(0.465, 0, 0, 40)
+            QuickCapture.Size = UDim2.new(0, 100, 0, 33)
+            QuickCapture.Font = Enum.Font.SourceSansBold
+            QuickCapture.Text = "O/C"
+            QuickCapture.TextColor3 = Color3.fromRGB(255, 0, 0)
+            QuickCapture.TextSize = 20.000
+            QuickCapture.Style = Enum.ButtonStyle.RobloxButtonDefault
+            QuickCapture.TextWrapped = true
+            QuickCapture.Draggable = true
+            
+            QuickCapture.TouchTap:Connect(function()
+                if Main.Visible == false then
+                    Main.Visible = true
+                else
+                    Main.Visible = false
+                end
+            end)
         end
     end
 
@@ -319,7 +348,7 @@ function Kavo.CreateLib(kavName, themeList)
 			Position = UDim2.new(0, Main.AbsolutePosition.X + (Main.AbsoluteSize.X / 2), 0, Main.AbsolutePosition.Y + (Main.AbsoluteSize.Y / 2))
 		}):Play()
         wait(1)
-        ScreenGui:Destroy()
+        Main.Visible = false
     end)
 
     MainSide.Name = "MainSide"
