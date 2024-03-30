@@ -299,10 +299,10 @@ function Kavo.CreateLib(kavName, themeList)
             QuickCapture.Draggable = true
             
             QuickCapture.TouchTap:Connect(function()
-                if ScreenGui.Visible == false then
-                    ScreenGui.Visible = true
+                if Main.Visible == false then
+                    Main.Visible = true
                 else
-                    ScreenGui.Visible = false
+                    Main.Visible = false
                 end
             end)
         end
