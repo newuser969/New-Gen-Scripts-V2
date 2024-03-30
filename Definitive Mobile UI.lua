@@ -306,23 +306,6 @@ function Kavo.CreateLib(kavName, themeList)
                     Main.Visible = false
                 end
             end)
-        elseif coregui:FindFirstChild("Show") then
-            coregui:FindFirstChild("Show"):Destroy()
-            local NewScreenGui = Instance.new("ScreenGui", coregui)
-            NewScreenGui.Name = "Show"
-            local QuickCapture = Instance.new("TextButton", NewScreenGui)
-            QuickCapture.Name = "UI"
-            QuickCapture.BackgroundColor3 = Color3.fromRGB(85, 0, 255)
-            QuickCapture.BackgroundTransparency = 0.14
-            QuickCapture.Position = UDim2.new(0.465, 0, 0, 40)
-            QuickCapture.Size = UDim2.new(0, 100, 0, 33)
-            QuickCapture.Font = Enum.Font.SourceSansBold
-            QuickCapture.Text = "O/C"
-            QuickCapture.TextColor3 = Color3.fromRGB(255, 0, 0)
-            QuickCapture.TextSize = 20.000
-            QuickCapture.Style = Enum.ButtonStyle.RobloxButtonDefault
-            QuickCapture.TextWrapped = true
-            QuickCapture.Draggable = true
         end
     end
 
