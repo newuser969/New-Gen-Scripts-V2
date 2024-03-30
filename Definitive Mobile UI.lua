@@ -1,9 +1,10 @@
 local Kavo = {}
 
-local tween = game:GetService("TweenService")
+local tween = cloneref(game:GetService("TweenService"))
 local tweeninfo = TweenInfo.new
-local input = game:GetService("UserInputService")
-local run = game:GetService("RunService")
+local input = cloneref(game:GetService("UserInputService"))
+local run = cloneref(game:GetService("RunService"))
+local coregui = cloneref(game:GetService("CoreGui"))
 local IsOnMobile = table.find({Enum.Platform.IOS, Enum.Platform.Android}, input:GetPlatform())
 
 local Utility = {}
@@ -223,7 +224,7 @@ function Kavo.CreateLib(kavName, themeList)
     blurFrame.Size = UDim2.new(0, 376, 0, 289)
     blurFrame.ZIndex = 999
 
-    ScreenGui.Parent = game.CoreGui
+    ScreenGui.Parent = coregui
     ScreenGui.Name = LibName
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.ResetOnSpawn = false
@@ -281,8 +282,8 @@ function Kavo.CreateLib(kavName, themeList)
     close.ImageRectSize = Vector2.new(24, 24)
 
     if IsOnMobile then
-        if not game.CoreGui:FindFirstChild("Show") then
-            local NewScreenGui = Instance.new("ScreenGui", game.CoreGui)
+        if not coregui:FindFirstChild("Show") then
+            local NewScreenGui = Instance.new("ScreenGui", coregui)
             NewScreenGui.Name = "Show"
             local QuickCapture = Instance.new("TextButton", NewScreenGui)
             QuickCapture.Name = "UI"
@@ -305,6 +306,23 @@ function Kavo.CreateLib(kavName, themeList)
                     Main.Visible = false
                 end
             end)
+        elseif coregui:FindFirstChild("Show") then
+            coregui:FindFirstChild("Show"):Destroy()
+            local NewScreenGui = Instance.new("ScreenGui", coregui)
+            NewScreenGui.Name = "Show"
+            local QuickCapture = Instance.new("TextButton", NewScreenGui)
+            QuickCapture.Name = "UI"
+            QuickCapture.BackgroundColor3 = Color3.fromRGB(85, 0, 255)
+            QuickCapture.BackgroundTransparency = 0.14
+            QuickCapture.Position = UDim2.new(0.465, 0, 0, 40)
+            QuickCapture.Size = UDim2.new(0, 100, 0, 33)
+            QuickCapture.Font = Enum.Font.SourceSansBold
+            QuickCapture.Text = "O/C"
+            QuickCapture.TextColor3 = Color3.fromRGB(255, 0, 0)
+            QuickCapture.TextSize = 20.000
+            QuickCapture.Style = Enum.ButtonStyle.RobloxButtonDefault
+            QuickCapture.TextWrapped = true
+            QuickCapture.Draggable = true
         end
     end
 
